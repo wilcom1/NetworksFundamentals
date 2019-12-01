@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class Client {
 	
@@ -18,6 +19,7 @@ public class Client {
 	public Client(String host, int port, String file) {
 		try {
 			loopResend(host,port,file, 0);
+			sendFileWave(host,port,file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -51,6 +53,44 @@ public class Client {
 		while (fis.read(buffer) > 0) {
 			dos.write(buffer);
 			//Get the return message from the server
+		}
+		
+		
+		 InputStream is = s.getInputStream();
+         InputStreamReader isr = new InputStreamReader(is);
+         BufferedReader br = new BufferedReader(isr);
+         String message = br.readLine();
+         System.out.println("Message received from the server : " +message);
+		
+		fis.close();
+		dos.close();	
+	}
+	
+	
+	public void sendFileWave(String host, int port, String file) throws IOException {
+		
+		s = new Socket(host, port);
+		DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[1640];
+		int contador = 0;
+		byte[] buffer2 = null;
+		while (fis.read(buffer) > 0) {
+			double limit = 2;
+			buffer2 = new byte[(int)limit];
+			for(int i=0; i<buffer.length;i++) {
+				if(contador<limit) {
+					buffer2[contador]=buffer[i];
+					contador++;
+					System.out.println("contador: "+ contador);
+				}else {
+					dos.write(buffer2);
+					System.out.println("Se envía buffer de: "+ limit);
+					limit = Math.pow(limit,2);
+					buffer2 = new byte[(int)limit];
+					contador = 0;
+				}
+			}
 		}
 		
 		

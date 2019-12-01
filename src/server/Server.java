@@ -59,7 +59,6 @@ public class Server extends Thread {
 			remaining -= read;
 			System.out.println("read " + totalRead + " bytes.");
 			fos.write(buffer, 0, read);
-			
 		}
 		
 		//Responder
