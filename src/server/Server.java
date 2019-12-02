@@ -28,7 +28,11 @@ public class Server extends Thread {
 		while (true) {
 			try {
 				Socket clientSock = ss.accept();
-				readHeader(clientSock);
+				try {
+					readHeader(clientSock);
+				}catch(Exception e) {
+					System.out.println("Error leyendo Header");
+				}
 				saveFile(clientSock);
 			} catch (IOException e) {
 				e.printStackTrace();

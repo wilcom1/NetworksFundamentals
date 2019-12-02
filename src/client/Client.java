@@ -70,6 +70,8 @@ public class Client {
 	public void sendFileWave(String host, int port, String file) throws IOException {
 		
 		s = new Socket(host, port);
+		sendHeader(String.valueOf(90000));//Modificar de acuerdo con el tamaño de la ventana a usar.
+		
 		DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 		FileInputStream fis = new FileInputStream(file);
 		byte[] buffer = new byte[1640];
@@ -81,8 +83,7 @@ public class Client {
 			for(int i=0; i<buffer.length;i++) {
 				if(contador<limit) {
 					buffer2[contador]=buffer[i];
-					contador++;
-					System.out.println("contador: "+ contador);
+					contador++;System.out.println("contador: "+ contador);
 				}else {
 					dos.write(buffer2);
 					System.out.println("Se envía buffer de: "+ limit);
@@ -94,11 +95,11 @@ public class Client {
 		}
 		
 		
-		 InputStream is = s.getInputStream();
-         InputStreamReader isr = new InputStreamReader(is);
-         BufferedReader br = new BufferedReader(isr);
-         String message = br.readLine();
-         System.out.println("Message received from the server : " +message);
+//		 InputStream is = s.getInputStream();
+//         InputStreamReader isr = new InputStreamReader(is);
+//         BufferedReader br = new BufferedReader(isr);
+//         String message = br.readLine();
+         System.out.println("Termina el envío del archivo");
 		
 		fis.close();
 		dos.close();	
